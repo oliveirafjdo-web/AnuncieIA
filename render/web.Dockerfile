@@ -3,7 +3,7 @@ FROM node:20-alpine AS base
 WORKDIR /app
 COPY . .
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 RUN pnpm build
 
 FROM node:20-alpine
