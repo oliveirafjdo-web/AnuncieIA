@@ -1,14 +1,23 @@
-# Next.js app - single service
+# Etapa base
 FROM node:20-alpine AS base
+
+# Ativa o corepack (gerenciador que instala pnpm)
+RUN corepack enable
+
+# Define diretório de trabalho
 WORKDIR /app
+
+# Copia arquivos do projeto
 COPY . .
-RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
-RUN pnpm install
+
+# Instala dependências
+RUN corepack prepare pnpm@9.0.0 --activate && pnpm install --no-frozen-lockfile
+
+# Compila o projeto Next.js
 RUN pnpm build
 
-FROM node:20-alpine
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=base /app .
+# Exposição da porta padrão
 EXPOSE 3000
-CMD ["pnpm","start"]
+
+# Comando de inicialização
+CMD ["pnpm", "start"]
