@@ -1,31 +1,12 @@
+
 import { NextResponse } from "next/server";
-
-export async function POST(req: Request) {
-  const { text } = await req.json();
-  const t = String(text||'');
-  let score = 100;
-  const suggestions: string[] = [];
-  if (t.length < 200) { score -= 20; suggestions.push('Aumente a riqueza da descrição (mín. 200+ palavras).'); }
-  if (!/\n/.test(t)) { score -= 10; suggestions.push('Use quebras de linha e seções para facilitar a leitura.'); }
-  if (!/\bgarantia\b/i.test(t)) { score -= 10; suggestions.push('Inclua garantia e política de devolução.'); }
-  if (!/\bcompat[ií]vel\b/i.test(t)) { score -= 10; suggestions.push('Liste compatibilidades (Windows, Mac, etc.).'); }
-
-  const rewrite = [
-    'Resumo: Produto com foco em estabilidade, desempenho e instalação simples.',
-    '',
-    'Benefícios:',
-    '• Alta velocidade e estabilidade para trabalho e lazer;',
-    '• Compatível com Windows e Mac;',
-    '• Instalação Plug & Play;',
-    '• Suporte Redutron e garantia.',
-    '',
-    'Especificações:',
-    '• Consulte a seção técnica do seu produto.',
-    '',
-    'Envio & Garantia:',
-    '• Postagem rápida;',
-    '• Garantia e suporte ágil.'
-  ].join('\n');
-
-  return NextResponse.json({ score: Math.max(0, score), suggestions: suggestions.join('\n'), rewrite });
+export async function POST(req: Request){
+  const { texto='' } = await req.json();
+  const len = String(texto).split(/\s+/).filter(Boolean).length;
+  let score = 80; const sugestoes:string[] = [];
+  if(len < 60){ score -= 10; sugestoes.push('Amplie os benefícios (além de 60 palavras).'); }
+  if(!/\b(dual band|usb 3\.0|wi-?fi 5|plug ?& ?play)\b/i.test(texto)){ score -= 10; sugestoes.push('Inclua termos fortes: Wi‑Fi 5, Dual Band, USB 3.0, Plug & Play.'); }
+  if(!/\n/.test(texto)){ score -= 5; sugestoes.push('Use quebras de linha para leitura fácil.'); }
+  const reescrita = '• Wi‑Fi 5 Dual Band (2.4/5 GHz) para velocidade e estabilidade.\n• USB 3.0 — instalação imediata (Plug & Play).\n• Compatível com Windows e macOS.\n• Ideal para jogos, streaming e videochamadas.\n• Suporte e garantia Redutron.';
+  return NextResponse.json({ score: Math.max(0,score), sugestoes, reescrita });
 }

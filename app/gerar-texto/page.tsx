@@ -1,45 +1,41 @@
+
 'use client';
 import { useState } from 'react';
-
-export default function GerarTexto() {
-  const [nome, setNome] = useState('Adaptador Wi‑Fi Dual Band USB 3.0');
-  const [carac, setCarac] = useState('Wi‑Fi 5; 2.4/5 GHz; Plug & Play; Windows/Mac');
-  const [saida, setSaida] = useState<any>(null);
+export default function Page(){
+  const [produto, setProduto] = useState('Adaptador Wi‑Fi 5 Dual Band USB 3.0');
+  const [features, setFeatures] = useState('Alta velocidade; Estável; Plug & Play; Windows/macOS');
+  const [modo, setModo] = useState('descricao');
+  const [out, setOut] = useState<any>({});
   const [loading, setLoading] = useState(false);
-
-  const gerar = async (tipo: string) => {
+  const gerar = async () => {
     setLoading(true);
-    const res = await fetch('/api/gerar-texto', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, carac, tipo })
-    });
-    const data = await res.json();
-    setSaida(data);
+    const r = await fetch('/api/gerar-texto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({produto,features,modo})});
+    const data = await r.json();
+    setOut(data);
     setLoading(false);
   };
-
   return (
     <section className="card">
-      <h2 className="text-lg mb-3">Gerador de Textos</h2>
-      <label className="label">Produto</label>
-      <input className="input mb-2" value={nome} onChange={e=>setNome(e.target.value)} />
-      <label className="label">Principais características (separe por ;)</label>
-      <input className="input mb-4" value={carac} onChange={e=>setCarac(e.target.value)} />
-      <div className="flex gap-2 mb-3">
-        <button className="btn" onClick={()=>gerar('titulo')} disabled={loading}>Gerar Título</button>
-        <button className="btn" onClick={()=>gerar('descricao')} disabled={loading}>Gerar Descrição</button>
-        <button className="btn-secondary" onClick={()=>gerar('objeções')} disabled={loading}>Quebra de Objeções</button>
+      <h2 className="text-lg font-semibold mb-3">Gerador de Textos</h2>
+      <div className="grid2">
+        <div><label className="label">Produto</label><input className="input" value={produto} onChange={e=>setProduto(e.target.value)} /></div>
+        <div><label className="label">Características (separe por ;)</label><input className="input" value={features} onChange={e=>setFeatures(e.target.value)} /></div>
       </div>
-      {loading && <p>Gerando...</p>}
-      {saida && (
-        <div className="grid2">
-          {saida.titulo && <div><h3 className="mb-1">Título</h3><pre className="whitespace-pre-wrap">{saida.titulo}</pre></div>}
-          {saida.descricao && <div><h3 className="mb-1">Descrição</h3><pre className="whitespace-pre-wrap">{saida.descricao}</pre></div>}
-          {saida.objeções && <div className="md:col-span-2"><h3 className="mb-1">Objeções</h3><pre className="whitespace-pre-wrap">{saida.objeções}</pre></div>}
-          {saida.tags && <div className="md:col-span-2"><h3 className="mb-1">Tags sugeridas</h3><pre className="whitespace-pre-wrap">{saida.tags}</pre></div>}
-        </div>
-      )}
+      <div className="mt-3 flex gap-2">
+        <select className="input max-w-xs" value={modo} onChange={e=>setModo(e.target.value)}>
+          <option value="titulo">Título</option>
+          <option value="descricao">Descrição</option>
+          <option value="objeções">Quebra de Objeções</option>
+          <option value="tecnica">Texto Técnico</option>
+        </select>
+        <button className="btn" onClick={gerar} disabled={loading}>{loading?'Gerando...':'Gerar'}</button>
+      </div>
+      <div className="mt-4 space-y-3">
+        {out.titulo && <div><b>Título</b><pre className="whitespace-pre-wrap">{out.titulo}</pre></div>}
+        {out.descricao && <div><b>Descrição</b><pre className="whitespace-pre-wrap">{out.descricao}</pre></div>}
+        {out.objeções && <div><b>Objeções</b><pre className="whitespace-pre-wrap">{out.objeções}</pre></div>}
+        {out.tags && <div><b>Tags</b><pre className="whitespace-pre-wrap">{out.tags}</pre></div>}
+      </div>
     </section>
-  )
+  );
 }

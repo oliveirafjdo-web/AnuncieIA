@@ -1,15 +1,15 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html, body { height: 100%; background: #0b1220; color: white; }
-a { color: #a5e1ff; }
-.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
-.card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; }
-.btn { @apply px-4 py-2 rounded-md bg-redutronBlue hover:opacity-90 text-white; }
-.btn-secondary { @apply px-4 py-2 rounded-md bg-redutronGreen hover:opacity-90 text-black; }
-.input { @apply w-full px-3 py-2 rounded-md bg-black/30 border border-white/10 outline-none; }
-.label { @apply text-sm opacity-80 mb-1; }
-.grid2 { @apply grid grid-cols-1 md:grid-cols-2 gap-4; }
-.grid3 { @apply grid grid-cols-1 md:grid-cols-3 gap-4; }
-.badge { @apply inline-block text-xs px-2 py-1 rounded bg-white/10 border border-white/10; }
+:root { --radius: 10px; }
+body { @apply bg-gray-50 text-gray-900; }
+.container { @apply max-w-6xl mx-auto px-4; }
+.card { @apply bg-white rounded-xl shadow p-5; }
+.btn { @apply inline-flex items-center gap-2 rounded-md px-4 py-2 font-medium bg-redutronBlue text-white hover:opacity-90; }
+.btn-2 { @apply inline-flex items-center gap-2 rounded-md px-4 py-2 font-medium bg-gray-900 text-white hover:opacity-90; }
+.input { @apply w-full rounded-md border border-gray-300 px-3 py-2; }
+.label { @apply text-sm font-medium text-gray-700; }
+.grid2 { @apply grid md:grid-cols-2 gap-4; }
+.grid3 { @apply grid md:grid-cols-3 gap-4; }
